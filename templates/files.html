@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title> ::: CLOUD :::  </title>
+        
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        
+        <!-- FontAwesome Icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+        <style>
+            body {
+                background-color: #000; /* Black background */
+                color: white;
+            }
+            .container {
+                margin-top: 30px;
+            }
+            .card {
+                transition: transform 0.3s ease-in-out;
+                text-align: center;
+                padding: 15px;
+                border-radius: 8px;
+                background: #121212;
+                border: 1px solid #333;
+            }
+            .card:hover {
+                transform: scale(1.1);
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            }
+            .folder-icon {
+                width: 50px;
+                height: 50px;
+            }
+            .file-icon {
+                color: #ff4500; /* Orange-red for video files */
+                font-size: 40px;
+                transition: color 0.3s;
+            }
+            .file-icon:hover {
+                color: #ff6347;
+            }
+            .card-body p {
+                margin-top: 10px;
+                font-size: 14px;
+                font-weight: bold;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 100%;
+            }
+            .card-body p:hover {
+                overflow: visible;
+                white-space: normal;
+                background: rgba(0, 0, 0, 0.8);
+                padding: 5px;
+                border-radius: 5px;
+            }
+            .nav-buttons {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+            }
+            .btn-custom {
+                background-color: #ffcc00;
+                color: black;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 10px 15px;
+                text-decoration: none;
+            }
+            .btn-custom:hover {
+                background-color: #ffd700;
+            }
+            /* Search bar styling */
+            .search-container {
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .search-input {
+                width: 50%;
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #ffcc00;
+                background: #222;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="nav-buttons">
+                {% if current_folder %}
+                    <a href="{{ url_for('s3_files', folder='/'.join(current_folder.split('/')[:-1])) }}" class="btn btn-custom">⬅ Go Back</a>
+                {% endif %}
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Log Out</a>
+            </div>
+
+            <h2 class="text-center mb-4">:::::::::</h2>
+
+            <!-- Search Input Box -->
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search files & folders..." onkeyup="searchItems()">
+            </div>
+    
+            <div class="row" id="itemsContainer">
+                <!-- Show Folders -->
+                {% for folder in folders %}
+                    <div class="col-md-3 item">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <a href="{{ url_for('s3_files', folder=current_folder + '/' + folder) }}" class="text-decoration-none text-light">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png" alt="Folder Icon" class="folder-icon">
+                                    <p class="item-name" title="{{ folder }}">{{ folder[:15] }}...</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+    
+                <!-- Show Files -->
+                {% for file in files %}
+                    <div class="col-md-3 item">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <a href="{{ url_for('download_file', filename=current_folder + '/' + file) }}" class="text-decoration-none text-light">
+                                    <i class="fas fa-file-video file-icon"></i>
+                                    <p class="item-name" title="{{ file }}">{{ file[:15] }}...</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <!-- JavaScript for Search -->
+        <script>
+            function searchItems() {
+                let input = document.getElementById("searchInput").value.toLowerCase();
+                let items = document.querySelectorAll(".item");
+
+                items.forEach(item => {
+                    let name = item.querySelector(".item-name").textContent.toLowerCase();
+                    if (name.includes(input)) {
+                        item.style.display = "block";
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+            }
+        </script>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
