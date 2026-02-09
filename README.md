@@ -32,6 +32,9 @@ CCTV DVR → FTP Server → Python Backup Script → AWS S3 → Web Interface
 ## Deployment
 - Cloud storage: Amazon S3
 - Web access: semcloud.org
+  <img width="960" height="504" alt="semcloud 1" src="https://github.com/user-attachments/assets/5ebc2c1a-400e-4194-be29-38a5f7c63715" />
+<img width="960" height="504" alt="semcloud 2" src="https://github.com/user-attachments/assets/5f59356d-0b55-4abf-aa00-53e644839950" />
+
 
 ## Future Improvements
 - Scheduled automatic backups
