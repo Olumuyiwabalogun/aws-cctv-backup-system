@@ -14,7 +14,21 @@ This system automatically backs up CCTV footage from an FTP server to an
 Amazon S3 bucket and provides a web interface to browse and download files.
 
 ## Architecture
-CCTV DVR → FTP Server → Python Backup Script → AWS S3 → Web Interface
+CCTV Camera(s)
+      │
+      ▼
+ NVR / DVR (local)
+      │  FTP share
+      ▼
+Python Backup Agent  ──────────►  AWS S3 Bucket
+  (Flask + Boto3)                 (semcloudnvr)
+      │                               │
+      ▼                               │
+ Web Interface  ◄───────────────────── 
+  (semcloud.org)
+      │
+      ▼
+ Authorised User (remote browser/download)
 
 ## Technologies Used
 - Python
